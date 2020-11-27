@@ -54,35 +54,34 @@ public class SmartArrayApp {
 
         SmartArray sa = new BaseArray(students);
 
-        MyPredicate pr1 = new MyPredicate() {
+        MyPredicate pr = new MyPredicate() {
             @Override
             public boolean test(Object t) {
-                return ((Integer) t) == 2;
-            }
-        };
-
-        MyPredicate pr2 = new MyPredicate() {
-            @Override
-            public boolean test(Object t) {
-                return ((Integer) t) >= 4;
+                return ((Student) t).getYear() == 2 && ((Student) t).getGPA() >= 4;
             }
         };
 
         MyComparator cmp = new MyComparator() {
             @Override
             public int compare(Object o1, Object o2) {
-                return ((String) o1). ((String) o2);
+                return ((Student) o1).getSurname().compareTo(((Student) o2).getSurname());
             }
         };
 
+        MyFunction func = new MyFunction() {
+            @Override
+            public Object apply(Object t) {
+                return ((Student) t).getSurname() + " " + ((Student) t).getName();
+            }
+        };
 
-        sa = new FilterDecorator(sa, pr1);
-        sa = new FilterDecorator(sa, pr2);
+        sa = new DistinctDecorator(sa);
+        sa = new FilterDecorator(sa, pr);
         sa = new SortDecorator(sa, cmp);
+        sa = new MapDecorator(sa, func);
 
         // Hint: to convert Object[] to String[] - use the following code
         Object[] result = sa.toArray();
         return Arrays.copyOf(result, result.length, String[].class);
-        //return null;
     }
 }
